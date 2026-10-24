@@ -25,6 +25,13 @@ The test run emitted upstream Pydantic `json_encoders` deprecation warnings.
 Qt's offscreen backend could not create napari's OpenGL canvas on this Windows
 machine; the native Windows backend was used instead. Linux CI uses Xvfb.
 
+The first hosted CI runs also exposed two environment issues: Windows runners
+need a software OpenGL implementation, and PySide6 6.12.0 on Python 3.11 passed
+the assertions but crashed during interpreter shutdown. The GUI extra excludes
+that PySide6 release on Python below 3.12; Python 3.12 was validated with 6.12.0.
+Windows CI installs Mesa software OpenGL, following napari's own display setup.
+These restrictions do not skip any tests.
+
 ## Evidence boundary
 
 All bundled demonstration data are synthetic. These checks establish software

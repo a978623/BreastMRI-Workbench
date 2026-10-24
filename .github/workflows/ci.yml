@@ -1,0 +1,39 @@
+name: Tests and package
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    env:
+      QT_API: pyside6
+      MPLBACKEND: Agg
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - name: Linux Qt libraries
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y xvfb libegl1 libopengl0 libgl1 libxcb-cursor0 libxkbcommon-x11-0
+      - run: python -m pip install -e ".[gui,dev]"
+      - run: python -m ruff check .
+      - name: Tests (Linux OpenGL display)
+        if: runner.os == 'Linux'
+        run: xvfb-run -a python -m pytest
+      - name: Tests (Windows OpenGL display)
+        if: runner.os == 'Windows'
+        run: python -m pytest
+      - run: npe2 validate src/napari_breast_mri/napari.yaml
+      - run: python -m build
+      - run: python -m twine check dist/*
+      - name: Demo export smoke test
+        run: python -m napari_breast_mri --export-demo demo-report

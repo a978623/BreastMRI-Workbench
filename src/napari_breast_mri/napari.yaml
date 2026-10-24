@@ -1,0 +1,25 @@
+name: napari-breast-mri
+display_name: Breast MRI Workbench
+schema_version: 0.2.1
+contributions:
+  commands:
+    - id: napari-breast-mri.make_widget
+      python_name: napari_breast_mri._widget:BreastMRIWidget
+      title: Open Breast MRI Workbench
+    - id: napari-breast-mri.get_reader
+      python_name: napari_breast_mri.io:get_reader
+      title: Read NIfTI DCE-MRI
+    - id: napari-breast-mri.sample_data
+      python_name: napari_breast_mri.sample_data:make_sample_data
+      title: Generate synthetic DCE-MRI and ROI
+  readers:
+    - command: napari-breast-mri.get_reader
+      filename_patterns: ['*.nii', '*.nii.gz']
+      accepts_directories: false
+  widgets:
+    - command: napari-breast-mri.make_widget
+      display_name: Breast MRI Workbench
+  sample_data:
+    - command: napari-breast-mri.sample_data
+      key: synthetic-dce
+      display_name: Synthetic DCE-MRI with ROI (no patient data)

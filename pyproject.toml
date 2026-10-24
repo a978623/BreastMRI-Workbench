@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "napari-breast-mri"
+version = "0.1.0"
+description = "A napari workbench for breast DCE-MRI ROI curves and transparent data quality checks."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "BSD-3-Clause"
+authors = [{name = "moonlit (a978623)"}]
+keywords = ["napari", "DCE-MRI", "breast", "medical-imaging", "quality-control"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Framework :: napari",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+dependencies = [
+  "numpy>=1.24",
+  "nibabel>=5.2",
+  "matplotlib>=3.8",
+  "napari>=0.6,<0.8",
+  "qtpy>=2.4",
+]
+
+[project.optional-dependencies]
+gui = ["PySide6>=6.7,<7"]
+dev = ["pytest>=8", "pytest-qt>=4.4", "build>=1.2", "ruff>=0.9", "twine>=6"]
+
+[project.urls]
+Homepage = "https://github.com/a978623/BreastMRI-Workbench"
+Issues = "https://github.com/a978623/BreastMRI-Workbench/issues"
+
+[project.entry-points."napari.manifest"]
+napari-breast-mri = "napari_breast_mri:napari.yaml"
+
+[project.scripts]
+breast-mri-workbench = "napari_breast_mri.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+napari_breast_mri = ["napari.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --basetemp=.pytest-tmp"
+qt_api = "pyside6"
+filterwarnings = ["ignore:distutils Version classes are deprecated:DeprecationWarning"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
